@@ -58,4 +58,8 @@ Group {
             _exit(-1)
         }
     }
+
+    $0.command("version") {
+        print(version)
+    }
 }.run(version)
