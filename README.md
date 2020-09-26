@@ -1,6 +1,6 @@
 # lynx
 
-Set up Kotlin Multiplatform app by running one command 🚀
+Set up a Kotlin Multiplatform app by running one command 🚀
 
 ## What is lynx? 🤷‍♀️
 
@@ -19,8 +19,9 @@ bash <(curl -Ls https://raw.githubusercontent.com/DoubleSymmetry/lynx/master/ins
 ## Bootstrap your first project 🚀
 
 ```bash
-lynx init KMPStarter com.doublesymetry 
+lynx init ProjectName com.yourcomany 
 ```
+This will create a new app project with the given name using the given bundle identifier/package name.
 
 ## Updating lynx ✨
 
