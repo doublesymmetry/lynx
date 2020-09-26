@@ -16,10 +16,12 @@ The first thing that we need to do to get started is installing the tool. To do 
 bash <(curl -Ls https://raw.githubusercontent.com/DoubleSymmetry/lynx/master/install.sh)
 ```
 
-
 ## Bootstrap your first project 🚀
 
 ```bash
 lynx init KMPStarter com.doublesymetry 
 ```
 
+## Updating lynx ✨
+
+Same as the install instructions, the binary will be overriden.
