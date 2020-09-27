@@ -15,6 +15,10 @@ struct KaMPKit: Template {
     let productName: String
     let bundleId: String
 
+    func validate() throws {
+        guard Pod.canInstall() else { throw PodError.cocoapodsNotFound }
+    }
+
     func vivify() throws {
         // 1. download KMP template project from DS.
         print("Fetching template")
@@ -90,7 +94,6 @@ struct KaMPKit: Template {
         print("Installing iOS dependencies".cyan().bold())
         let iosRoot = "\(productName)/ios"
 
-        guard Pod.canInstall() else { throw PodError.cocoapodsNotFound }
         let podInstall = [FileUtils.cd(directory: iosRoot), Pod.install()]
 
         // We will pod install twice because of a bug in how the shared cocoapod is setup.

@@ -11,6 +11,7 @@ protocol Template {
     var productName: String { get }
     var bundleId: String { get }
 
+    func validate() throws
     func vivify() throws
     func cleanup() throws
     func printInstructions()
