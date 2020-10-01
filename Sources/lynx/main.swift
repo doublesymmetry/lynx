@@ -11,7 +11,7 @@ import Darwin
 import FileUtils
 import SwiftShell
 
-let version = "0.0.2"
+let version = "0.1.0"
 
 enum ExecutionError: Error, CustomStringConvertible {
     case invalidIdentifier
