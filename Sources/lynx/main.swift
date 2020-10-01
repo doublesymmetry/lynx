@@ -17,6 +17,7 @@ enum ExecutionError: Error, CustomStringConvertible {
     case invalidIdentifier
     case xcodeMissing
     case androidDeveloperToolsMissing
+    case invalidTemplate
 
     var description: String {
         switch self {
@@ -26,8 +27,15 @@ enum ExecutionError: Error, CustomStringConvertible {
             return "Xcode nor Xcode Command Line Tools is installed on this machine."
         case .androidDeveloperToolsMissing:
             return "Android developer environment not setup correctly. Are things added to $PATH?"
+        case .invalidTemplate:
+            let availableTemplates = TemplateOption.allCases.map { $0.rawValue }.joined(separator: ", ")
+            return "A template that does not exists was used. Available options are: \(availableTemplates)"
         }
     }
+}
+
+enum TemplateOption: String, CaseIterable {
+    case kampkit, swiftui
 }
 
 Group {
@@ -42,7 +50,11 @@ Group {
             guard bundleId.split(separator: ".").count == 2 else { throw ExecutionError.invalidIdentifier }
 
             print("Setting up".cyan().bold())
-            let template = KaMPKit(productName: productName, bundleId: bundleId)
+            guard let templateOption = TemplateOption.init(rawValue: templateName) else {
+                throw ExecutionError.invalidTemplate
+            }
+
+            let template = KaMPKit(productName: productName, bundleId: bundleId, withSwiftUI: templateOption == .swiftui)
             defer { try? template.cleanup() }
 
             print("Checking environment")

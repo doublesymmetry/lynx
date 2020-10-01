@@ -23,6 +23,16 @@ lynx init ProjectName com.yourcomany
 ```
 This will create a new app project with the given name using the given bundle identifier/package name.
 
+## CLI Options
+```
+Arguments:
+    name - The name to give the project
+    bundleId - The company bundle prefix to use (i.e. com.doublesymmetry)
+
+Options:
+    --template [default: kampkit] [options: kampkit, swiftui]
+```
+
 ## Updating lynx ✨
 
 Same as the install instructions, the binary will be overriden.

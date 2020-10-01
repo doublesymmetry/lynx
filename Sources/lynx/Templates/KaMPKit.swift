@@ -14,6 +14,7 @@ import XcodeBuildUtils
 struct KaMPKit: Template {
     let productName: String
     let bundleId: String
+    let withSwiftUI: Bool
 
     func validate() throws {
         guard Pod.canInstall() else { throw PodError.cocoapodsNotFound }
@@ -24,7 +25,7 @@ struct KaMPKit: Template {
         print("Fetching template")
         try GitUtils.clone(repository: "https://github.com/DoubleSymmetry/lynx.git", depth: 1, directory: ".temp/").execute()
 
-        let templatePath = ".temp/Templates/kampkit"
+        let templatePath = ".temp/Templates/\(withSwiftUI ? "kampkit-swiftui" : "kampkit")"
 
         // 2. copy files to the correct places
         print("Copying files")
