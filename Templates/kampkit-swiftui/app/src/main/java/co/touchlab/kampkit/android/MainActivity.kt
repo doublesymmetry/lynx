@@ -2,10 +2,11 @@ package co.touchlab.kampkit.android
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import co.touchlab.kampkit.android.adapter.MainAdapter
+import co.touchlab.kampkit.models.BreedViewModel
+import co.touchlab.kampkit.models.BreedViewModelDelegate
+import co.touchlab.kampkit.models.ItemDataSummary
 import co.touchlab.kermit.Kermit
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
@@ -20,28 +21,22 @@ class MainActivity : AppCompatActivity(), KoinComponent {
     private lateinit var adapter: MainAdapter
     private val log: Kermit by inject { parametersOf("MainActivity") }
 
-    private lateinit var viewModel: BreedViewModel
+    private val viewModel: BreedViewModel = BreedViewModel(object: BreedViewModelDelegate {
+        override fun onSummaryUpdate(summary: ItemDataSummary) {
+            log.v { "List submitted to adapter" }
+            adapter.submitList(summary.allItems)
+        }
+
+        override fun onErrorUpdate(error: String) {
+            log.e { "Error displayed: $error" }
+            Snackbar.make(breed_list, error, Snackbar.LENGTH_SHORT).show()
+        }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel = ViewModelProviders.of(this).get(BreedViewModel::class.java)
-
-        viewModel.breedLiveData.observe(
-            this,
-            Observer { itemData ->
-                log.v { "List submitted to adapter" }
-                adapter.submitList(itemData.allItems)
-            }
-        )
-        viewModel.errorLiveData.observe(
-            this,
-            Observer { errorMessage ->
-                log.e { "Error displayed: $errorMessage" }
-                Snackbar.make(breed_list, errorMessage, Snackbar.LENGTH_SHORT).show()
-            }
-        )
         adapter = MainAdapter {
             viewModel.updateBreedFavorite(it)
         }
@@ -49,6 +44,6 @@ class MainActivity : AppCompatActivity(), KoinComponent {
         breed_list.adapter = adapter
         breed_list.layoutManager = LinearLayoutManager(this)
 
-        viewModel.getBreedsFromNetwork()
+        viewModel.fetchBreeds()
     }
 }

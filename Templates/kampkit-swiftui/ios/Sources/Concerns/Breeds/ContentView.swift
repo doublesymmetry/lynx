@@ -11,17 +11,18 @@ import shared
 
 extension Breed: Identifiable {}
 
-class NativeViewModelWrapper: ObservableObject {
+class ViewModelWrapper: ObservableObject {
     @Published var data: [Breed] = []
     @Published var errorMessage: String?
 
-    lazy var log = KoinIOS().get(objCClass: Kermit.self, parameter: "ViewController") as! Kermit
+    lazy var log = KoinIOS().get(objCClass: Kermit.self, parameter: "ContentView") as! Kermit
 
-    lazy var adapter: NativeViewModel = NativeViewModel(
-        viewUpdate: { [weak self] summary in
+    lazy var viewModel = BreedViewModel(
+        onSummaryUpdate: { [weak self] summary in
             self?.log.d(withMessage: {"View updating with \(summary.allItems.count) breeds"})
             self?.data = summary.allItems
-        }, errorUpdate: { [weak self] error in
+        },
+        onErrorUpdate: { [weak self] error in
             self?.log.d(withMessage: {"Displaying error \(error)"})
             self?.errorMessage = error
         }
@@ -29,25 +30,25 @@ class NativeViewModelWrapper: ObservableObject {
 }
 
 struct ContentView: View {
-    @ObservedObject var viewModel = NativeViewModelWrapper()
+    @ObservedObject var viewModelWrapper = ViewModelWrapper()
 
     var body: some View {
         let showAlert = Binding<Bool>(
-            get: { self.viewModel.errorMessage != nil },
-            set: { _ in self.viewModel.errorMessage = nil }
+            get: { self.viewModelWrapper.errorMessage != nil },
+            set: { _ in self.viewModelWrapper.errorMessage = nil }
         )
 
-        return List(viewModel.data) { breed in
+        return List(viewModelWrapper.data) { breed in
             Text(breed.name)
             Spacer()
             Image(systemName: breed.favorite == 0 ? "heart" : "heart.fill")
                 .onTapGesture {
-                    viewModel.adapter.updateBreedFavorite(breed: breed)
+                    viewModelWrapper.viewModel.updateBreedFavorite(breed: breed)
                 }
         }.alert(isPresented: showAlert) {
-            Alert(title: Text("Error"), message: Text(viewModel.errorMessage!), dismissButton: .default(Text("Dismiss")))
+            Alert(title: Text("Error"), message: Text(viewModelWrapper.errorMessage!), dismissButton: .default(Text("Dismiss")))
         }.onAppear {
-            viewModel.adapter.getBreedsFromNetwork()
+            viewModelWrapper.viewModel.fetchBreeds()
         }
     }
 }

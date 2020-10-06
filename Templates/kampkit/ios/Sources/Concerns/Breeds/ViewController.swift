@@ -17,11 +17,12 @@ class BreedsViewController: UIViewController {
     // load lazily as we're using storyboards and the instantiation lifecycle happens
     // before we can setup KoinIOS inside the AppDelegate.
     lazy var log = KoinIOS().get(objCClass: Kermit.self, parameter: "ViewController") as! Kermit
-    
-    lazy var adapter: NativeViewModel = NativeViewModel(
-        viewUpdate: { [weak self] summary in
+
+    lazy var viewModel = BreedViewModel(
+        onSummaryUpdate: { [weak self] summary in
             self?.viewUpdate(for: summary)
-        }, errorUpdate: { [weak self] errorMessage in
+        },
+        onErrorUpdate: { [weak self] errorMessage in
             self?.errorUpdate(for: errorMessage)
         }
     )
@@ -33,12 +34,11 @@ class BreedsViewController: UIViewController {
         breedTableView.dataSource = self
         
         //We check for stalk data in this method
-        adapter.getBreedsFromNetwork()
+        viewModel.fetchBreeds()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        adapter.onDestroy()
     }
     
     // MARK: BreedModel Closures
@@ -78,6 +78,6 @@ extension BreedsViewController: UITableViewDataSource {
 // MARK: - BreedCellDelegate
 extension BreedsViewController: BreedCellDelegate {
     func toggleFavorite(_ breed: Breed) {
-        adapter.updateBreedFavorite(breed: breed)
+        viewModel.updateBreedFavorite(breed: breed)
     }
 }
