@@ -35,7 +35,7 @@ enum ExecutionError: Error, CustomStringConvertible {
 }
 
 enum TemplateOption: String, CaseIterable {
-    case kampkit, swiftui
+    case standard, kampkit
 }
 
 Group {
@@ -44,7 +44,7 @@ Group {
     $0.command("init",
                Argument<String>("name", description: "The name to give the project"),
                Argument<String>("bundleId", description: "The company bundle prefix to use (i.e. com.doublesymmetry)"),
-               Option("template", default: "kampkit")) { productName, bundleId, templateName in
+               Option("template", default: "standard")) { productName, bundleId, templateName in
         do {
             // 1. do validations
             guard bundleId.split(separator: ".").count == 2 else { throw ExecutionError.invalidIdentifier }
@@ -54,7 +54,7 @@ Group {
                 throw ExecutionError.invalidTemplate
             }
 
-            let template = KaMPKit(productName: productName, bundleId: bundleId, withSwiftUI: templateOption == .swiftui)
+            let template: Template = templateOption == .standard ? Standard(productName: productName, bundleId: bundleId) : KaMPKit(productName: productName, bundleId: bundleId)
             defer { try? template.cleanup() }
 
             print("Checking environment")

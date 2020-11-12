@@ -1,8 +1,8 @@
 //
-//  KaMPKit.swift
-//  lynx
+//  File.swift
+//  
 //
-//  Created by David Chavez on 24.09.20.
+//  Created by David Chavez on 13.11.20.
 //
 
 import Command
@@ -11,7 +11,7 @@ import Foundation
 import GitUtils
 import XcodeBuildUtils
 
-struct KaMPKit: Template {
+struct Standard: Template {
     let productName: String
     let bundleId: String
 
@@ -22,9 +22,9 @@ struct KaMPKit: Template {
     func vivify() throws {
         // 1. download KMP template project from DS.
         print("Fetching template")
-         try GitUtils.clone(repository: "https://github.com/touchlab/KaMPKit.git", depth: 1, directory: ".temp/").execute()
+         try GitUtils.clone(repository: "https://github.com/DoubleSymmetry/lynx.git", depth: 1, directory: ".temp/").execute()
 
-        let templatePath = ".temp"
+        let templatePath = ".temp/Templates/base"
 
         // 2. copy files to the correct places
         print("Copying files")
@@ -47,11 +47,14 @@ struct KaMPKit: Template {
         typealias ReplacePair = (replacee: String, replasor: String)
 
         print("Updating package names")
-        let folderReplaceMap: [ReplacePair] = [
-            ("co", String(bundleParts.first!)),
-            ("touchlab", String(bundleParts.last!)),
-            ("kampkit", productName.lowercased()),
+        var folderReplaceMap: [ReplacePair] = [
+            ("lynx", productName.lowercased()),
         ]
+
+        if "com.doublesymmetry" != bundleId {
+            folderReplaceMap.append(("com", String(bundleParts.first!)))
+            folderReplaceMap.append(("doublesymmetry", String(bundleParts.last!)))
+        }
 
         try folderReplaceMap.forEach { folderPair in
             try FileUtils.findWhile(path: productName, type: "d", name: folderPair.replacee, transform: { file in
@@ -61,23 +64,17 @@ struct KaMPKit: Template {
         }
 
         print("Updating file names")
-        try FileUtils.findWhile(path: productName, type: "d", name: "KaMPKit.xcodeproj", transform: { file in
-            let rawSedCommand = FileUtils.sed(script: "s/[[:<:]]KaMPKit[[:>:]]/\(productName)/").description
+        try FileUtils.findWhile(path: productName, type: "d", name: "Lynx.xcodeproj", transform: { file in
+            let rawSedCommand = FileUtils.sed(script: "s/[[:<:]]Lynx[[:>:]]/\(productName)/").description
             try FileUtils.mv(source: file, target: "$(echo '\(file)' | \(rawSedCommand))", force: true).execute()
         }).execute()
 
         print("Updating app name")
         let packageName = "\(bundleId).\(productName.lowercased())"
         let stringInFileReplaceMap: [ReplacePair] = [
-            ("co.touchlab.kampkit", packageName),
-            ("KaMPKitiOS", productName),
-            ("KaMPKitDb", "\(productName)Db"),
-            ("KampkitDb", "\(productName.lowercased().capitalized)Db"),
-            ("kampkitdb", productName.lowercased()),
-            ("KaMPKit", productName),
-            ("KampKit", productName),
-            ("KAMPKIT_SETTINGS", "\(productName.uppercased())_SETTINGS"),
-            ("KaMP Kit", productName),
+            ("com.doublesymmetry.lynx", packageName),
+            ("Lynx", productName),
+            ("LYNX_SETTINGS", "\(productName.uppercased())_SETTINGS"),
         ]
 
         try FileUtils.findWhile(path: productName, type: "f", transform: { file in
@@ -107,7 +104,7 @@ struct KaMPKit: Template {
         print("Warming up shared framework" + " (this may take a few minutes)".dim())
         try [
             FileUtils.cd(directory: iosRoot),
-            XcodeBuildUtils.build(sdk: "iphonesimulator", workspace: "\(productName).xcworkspace", scheme: "KaMPKit", destination: "'platform=iOS Simulator,name=iPhone 11 Pro'"),
+            XcodeBuildUtils.build(sdk: "iphonesimulator", workspace: "\(productName).xcworkspace", scheme: "Lynx", destination: "'platform=iOS Simulator,name=iPhone 11 Pro'"),
         ].execute(ignoreFailure: true)
 
         try podInstall.execute()
@@ -115,7 +112,7 @@ struct KaMPKit: Template {
         // 5. update scheme - this must happen after the pod install - for reasons.
         print("Updating scheme name")
         try FileUtils.findWhile(path: productName, type: "f", name: "*.xcscheme", transform: { file in
-            let rawSedCommand = FileUtils.sed(script: "s/[[:<:]]KaMPKit[[:>:]]/\(productName)/").description
+            let rawSedCommand = FileUtils.sed(script: "s/[[:<:]]Lynx[[:>:]]/\(productName)/").description
             try FileUtils.mv(source: file, target: "$(echo '\(file)' | \(rawSedCommand))", force: true).execute()
         }).execute()
     }
@@ -138,3 +135,4 @@ struct KaMPKit: Template {
         print("• Hit the Run button")
     }
 }
+
