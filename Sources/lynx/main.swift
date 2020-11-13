@@ -11,7 +11,7 @@ import Darwin
 import FileUtils
 import SwiftShell
 
-let version = "0.1.0"
+let version = "1.0.0"
 let tempPath = ".temp"
 
 enum ExecutionError: Error, CustomStringConvertible {
