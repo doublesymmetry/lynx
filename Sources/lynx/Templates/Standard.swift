@@ -14,31 +14,38 @@ import XcodeBuildUtils
 struct Standard: Template {
     let productName: String
     let bundleId: String
+    let useSwiftUI: Bool
+    let useCompose: Bool
+
+    let repositoryUrl = "https://github.com/DoubleSymmetry/lynx.git"
 
     func validate() throws {
         guard Pod.canInstall() else { throw PodError.cocoapodsNotFound }
     }
 
     func vivify() throws {
-        // 1. download KMP template project from DS.
-        print("Fetching template")
-         try GitUtils.clone(repository: "https://github.com/DoubleSymmetry/lynx.git", depth: 1, directory: ".temp/").execute()
+        // 1. download template project from DS.
+        try fetchRemoteTemplate()
 
-        let templatePath = ".temp/Templates/base"
+        let templatesPath = "\(tempPath)/Templates"
+        let baseTemplatePath = "\(templatesPath)/base"
 
         // 2. copy files to the correct places
         print("Copying files")
         let filesToCopy = ["gradlew", "gradlew.bat", "build.gradle.kts", "gradle.properties", "settings.gradle.kts"]
-        try FileUtils.cp(source: filesToCopy.map { "\(templatePath)/\($0)" }, target: productName).execute()
+        try FileUtils.cp(source: filesToCopy.map { "\(baseTemplatePath)/\($0)" }, target: productName).execute()
 
         print("Copying folders")
         try [
             FileUtils.mkdir(name: "\(productName)/gradle", createIntermediateDirectories: true),
-            FileUtils.cp(source: "\(templatePath)/gradle/wrapper", target: "\(productName)/gradle", recursive: true),
+            FileUtils.cp(source: "\(baseTemplatePath)/gradle/wrapper", target: "\(productName)/gradle", recursive: true),
         ].execute()
 
-        let directoriesToCopy = ["buildSrc", "app", "ios", "shared"]
-        try FileUtils.cp(source: directoriesToCopy.map { "\(templatePath)/\($0)" }, target: productName, recursive: true).execute()
+        let directoriesToCopy = ["buildSrc", "app", "shared"]
+        try FileUtils.cp(source: directoriesToCopy.map { "\(baseTemplatePath)/\($0)" }, target: productName, recursive: true).execute()
+
+        let iosDirectory = useSwiftUI ? "swiftui/ios" : "uikit/ios"
+        try FileUtils.cp(source: "\(templatesPath)/\(iosDirectory)", target: productName, recursive: true).execute()
 
         // 3. Replace template names and bundles
         let bundleParts = bundleId.split(separator: ".")
@@ -115,24 +122,6 @@ struct Standard: Template {
             let rawSedCommand = FileUtils.sed(script: "s/[[:<:]]Lynx[[:>:]]/\(productName)/").description
             try FileUtils.mv(source: file, target: "$(echo '\(file)' | \(rawSedCommand))", force: true).execute()
         }).execute()
-    }
-
-    func cleanup() throws {
-        try FileUtils.rm(file: ".temp", force: true, recursive: true).execute()
-    }
-
-    func printInstructions() {
-        print("\n")
-        print("Run instructions for iOS:".lightCyan())
-        print("• Open \(productName)/ios/\(productName).xcworkspace in Xcode")
-        print("• Hit the Run button")
-        print("- or -")
-        print("• Run \"cd \(productName) && xed -b ios\"")
-        print("• Hit the Run button")
-        print("\n")
-        print("Run instructions for Android:".lightGreen())
-        print("• Open \(productName) in Android Studio")
-        print("• Hit the Run button")
     }
 }
 

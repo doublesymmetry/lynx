@@ -1,6 +1,0 @@
-framework module Pods_Lynx {
-  umbrella header "Pods-Lynx-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -26,11 +26,14 @@ This will create a new app project with the given name using the given bundle id
 ## CLI Options
 ```
 Arguments:
+
     name - The name to give the project
     bundleId - The company bundle prefix to use (i.e. com.doublesymmetry)
 
 Options:
-    --template [default: kampkit] [options: kampkit, swiftui]
+    --use-swiftui [default: false] - Whether the generated iOS project should use SwiftUI
+    --use-compose [default: false] - Whether the generated Android project should use Jetpack Compose
+    --template [optional] - A third party template to use instead - options are: kampkit
 ```
 
 ## Updating lynx ✨

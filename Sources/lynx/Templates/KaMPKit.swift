@@ -15,16 +15,17 @@ struct KaMPKit: Template {
     let productName: String
     let bundleId: String
 
+    let repositoryUrl = "https://github.com/touchlab/KaMPKit.git"
+
     func validate() throws {
         guard Pod.canInstall() else { throw PodError.cocoapodsNotFound }
     }
 
     func vivify() throws {
         // 1. download KMP template project from DS.
-        print("Fetching template")
-         try GitUtils.clone(repository: "https://github.com/touchlab/KaMPKit.git", depth: 1, directory: ".temp/").execute()
+        try fetchRemoteTemplate()
 
-        let templatePath = ".temp"
+        let templatePath = "\(tempPath)"
 
         // 2. copy files to the correct places
         print("Copying files")
@@ -118,23 +119,5 @@ struct KaMPKit: Template {
             let rawSedCommand = FileUtils.sed(script: "s/[[:<:]]KaMPKit[[:>:]]/\(productName)/").description
             try FileUtils.mv(source: file, target: "$(echo '\(file)' | \(rawSedCommand))", force: true).execute()
         }).execute()
-    }
-
-    func cleanup() throws {
-        try FileUtils.rm(file: ".temp", force: true, recursive: true).execute()
-    }
-
-    func printInstructions() {
-        print("\n")
-        print("Run instructions for iOS:".lightCyan())
-        print("• Open \(productName)/ios/\(productName).xcworkspace in Xcode")
-        print("• Hit the Run button")
-        print("- or -")
-        print("• Run \"cd \(productName) && xed -b ios\"")
-        print("• Hit the Run button")
-        print("\n")
-        print("Run instructions for Android:".lightGreen())
-        print("• Open \(productName) in Android Studio")
-        print("• Hit the Run button")
     }
 }

@@ -12,11 +12,12 @@ import FileUtils
 import SwiftShell
 
 let version = "0.1.0"
+let tempPath = ".temp"
 
 enum ExecutionError: Error, CustomStringConvertible {
     case invalidIdentifier
     case xcodeMissing
-    case androidDeveloperToolsMissing
+    case javaMissing
     case invalidTemplate
 
     var description: String {
@@ -25,17 +26,17 @@ enum ExecutionError: Error, CustomStringConvertible {
             return "The bundle identifier prefix is invalid. Example: com.doublesymmetry"
         case .xcodeMissing:
             return "Xcode nor Xcode Command Line Tools is installed on this machine."
-        case .androidDeveloperToolsMissing:
-            return "Android developer environment not setup correctly. Are things added to $PATH?"
+        case .javaMissing:
+            return "Java is not setup correctly."
         case .invalidTemplate:
-            let availableTemplates = TemplateOption.allCases.map { $0.rawValue }.joined(separator: ", ")
             return "A template that does not exists was used. Available options are: \(availableTemplates)"
         }
     }
 }
 
+let availableTemplates = TemplateOption.allCases.map { $0.rawValue }.joined(separator: ", ")
 enum TemplateOption: String, CaseIterable {
-    case standard, kampkit
+    case kampkit
 }
 
 Group {
@@ -44,25 +45,39 @@ Group {
     $0.command("init",
                Argument<String>("name", description: "The name to give the project"),
                Argument<String>("bundleId", description: "The company bundle prefix to use (i.e. com.doublesymmetry)"),
-               Option("template", default: "standard")) { productName, bundleId, templateName in
+               Flag("use-swiftui", default: false, description: "Whether the generated iOS project should use SwiftUI"),
+               Flag("use-compose", default: false, description: "Whether the generated Android project should use Jetpack Compose"),
+               Option<String?>("template", default: nil, description: "A third party template to use - options are: \(availableTemplates)")
+    ) { productName, bundleId, useSwiftUI, useCompose, templateName in
         do {
             // 1. do validations
             guard bundleId.split(separator: ".").count == 2 else { throw ExecutionError.invalidIdentifier }
 
-            print("Setting up".cyan().bold())
-            guard let templateOption = TemplateOption.init(rawValue: templateName) else {
-                throw ExecutionError.invalidTemplate
+            if templateName != nil && (useSwiftUI || useCompose) {
+                print("Third-party templates do not support the --use-swiftui or --use-compose flags. ignoring...".yellow().bold())
             }
 
-            let template: Template = templateOption == .standard ? Standard(productName: productName, bundleId: bundleId) : KaMPKit(productName: productName, bundleId: bundleId)
+            var template: Template = Standard(productName: productName, bundleId: bundleId, useSwiftUI: useSwiftUI, useCompose: useCompose)
+            if let templateName = templateName {
+                guard let templateOption = TemplateOption.init(rawValue: templateName) else {
+                    throw ExecutionError.invalidTemplate
+                }
+
+                switch templateOption {
+                case .kampkit:
+                    template = KaMPKit(productName: productName, bundleId: bundleId)
+                }
+            }
+
+            print("Setting up".cyan().bold())
             defer { try? template.cleanup() }
 
             print("Checking environment")
             let xcodeCheckCommand = run("which", "xcodebuild")
             if !xcodeCheckCommand.succeeded { throw ExecutionError.xcodeMissing  }
 
-            let androidStudioCheck = run("which", "adb")
-            if !androidStudioCheck.succeeded { throw ExecutionError.androidDeveloperToolsMissing  }
+            let javaCheck = run("which", "java")
+            if !javaCheck.succeeded { throw ExecutionError.javaMissing  }
 
             print("Running template validations")
             try template.validate()
@@ -73,7 +88,7 @@ Group {
             try FileUtils.mkdir(name: productName).execute()
 
             // 3. apply template
-            print("Applying template: \(templateName)".cyan().bold())
+            print("Generating project...".cyan().bold())
             try template.vivify()
 
             // 4. profit
