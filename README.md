@@ -20,6 +20,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/DoubleSymmetry/lynx/master/ins
 
 ```bash
 lynx init ProjectName com.yourcomany 
+lynx init ProjectName com.yourcomany --use-swiftui # the ios project will be a SwiftUI project
 ```
 This will create a new app project with the given name using the given bundle identifier/package name.
 
@@ -32,7 +33,7 @@ Arguments:
 
 Options:
     --use-swiftui [default: false] - Whether the generated iOS project should use SwiftUI
-    --use-compose [default: false] - Whether the generated Android project should use Jetpack Compose
+    --use-compose (coming soon) [default: false] - Whether the generated Android project should use Jetpack Compose
     --template [optional] - A third party template to use instead - options are: kampkit
 ```
 
