@@ -52,6 +52,7 @@ struct KaMPKit: Template {
             ("co", String(bundleParts.first!)),
             ("touchlab", String(bundleParts.last!)),
             ("kampkit", productName.lowercased()),
+            ("KaMPKitiOS", productName),
         ]
 
         try folderReplaceMap.forEach { folderPair in
@@ -62,8 +63,8 @@ struct KaMPKit: Template {
         }
 
         print("Updating file names")
-        try FileUtils.findWhile(path: productName, type: "d", name: "KaMPKit.xcodeproj", transform: { file in
-            let rawSedCommand = FileUtils.sed(script: "s/[[:<:]]KaMPKit[[:>:]]/\(productName)/").description
+        try FileUtils.findWhile(path: productName, type: "d", name: "KaMPKitiOS.xcodeproj", transform: { file in
+            let rawSedCommand = FileUtils.sed(script: "s/[[:<:]]KaMPKitiOS[[:>:]]/\(productName)/").description
             try FileUtils.mv(source: file, target: "$(echo '\(file)' | \(rawSedCommand))", force: true).execute()
         }).execute()
 
@@ -90,6 +91,12 @@ struct KaMPKit: Template {
                 ).execute()
             }
         }).execute()
+
+        print("Removing unnecessary files")
+        let filesToRemove = ["KaMPKitiOSTests", "KaMPKitiOSUITests", "KaMPKitiOS.xcworkspace"]
+        try filesToRemove.forEach {
+            try FileUtils.rm(file: "\(productName)/ios/\($0)", force: true, verbose: false, recursive: true).execute()
+        }
 
         // 4. run pod install
         print("Installing iOS dependencies".cyan().bold())
