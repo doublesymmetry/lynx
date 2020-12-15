@@ -11,7 +11,7 @@ import shared
 extension MainViewModel {
     class Wrapper: ObservableObject {
         lazy var viewModel = MainViewModel()
-        private let log = KoinIOS().logger(tag: "MainViewModelWrapper")
+        @Inject(parameter: "MainViewModelWrapper") var log: Kermit
 
         @Published var fact: String = ""
 

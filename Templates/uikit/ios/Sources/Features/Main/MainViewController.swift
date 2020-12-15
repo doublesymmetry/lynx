@@ -17,8 +17,8 @@ class MainViewController: UIViewController {
 
     // MARK: - Attributes
 
+    @Inject(parameter: String(describing: type(of: self))) var log: Kermit
     private lazy var viewModel = MainViewModel()
-    private lazy var log = KoinIOS().logger(tag: String(describing: type(of: self)))
 
 
     // MARK: - UIViewController

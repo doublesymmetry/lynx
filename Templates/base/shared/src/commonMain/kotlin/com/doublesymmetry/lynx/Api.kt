@@ -64,14 +64,11 @@ class Api(private val appInfo: AppInfo, private val log: Kermit) {
             }
         }
 
-        return client.get<Response>(builder).all.shuffled().take(1)[0].text
+        return client.get<Response>(builder).shuffled().take(1)[0].text
     }
 }
 
-@Serializable
-data class Response (
-    val all: List<Fact>
-)
+typealias Response = List<Fact>
 
 @Serializable
 data class Fact(

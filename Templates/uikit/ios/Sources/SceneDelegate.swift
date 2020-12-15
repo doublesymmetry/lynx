@@ -7,12 +7,6 @@
 //
 
 import UIKit
-import shared
-
-class IosAppInfo : AppInfo {
-    let appId: String = Bundle.main.bundleIdentifier!
-    var hostUrl: String = Bundle.main.object(forInfoDictionaryKey: "HostURL") as! String
-}
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -23,9 +17,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
-
-        let userDefaults = UserDefaults(suiteName: "LYNX_SETTINGS")!
-        KoinIOS().initialize(userDefaults: userDefaults, appInfo: IosAppInfo())
 
         // Override point for customization after application launch.
     }

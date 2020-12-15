@@ -7,11 +7,21 @@
 //
 
 import UIKit
+import shared
+
+class IosAppInfo : AppInfo {
+    let appId: String = Bundle.main.bundleIdentifier!
+    var hostUrl: String = Bundle.main.object(forInfoDictionaryKey: "HostURL") as! String
+}
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+
         // Override point for customization after application launch.
+        let userDefaults = UserDefaults(suiteName: "LYNX_SETTINGS")!
+        KoinIOS().initialize(userDefaults: userDefaults, appInfo: IosAppInfo())
+
         return true
     }
 

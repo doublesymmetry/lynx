@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		028612ED82FA9846A90E6074 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E393AB41A1A858A5C3BBB7 /* MainView.swift */; };
-		2A57F6FB73C929C09780E30A /* KoinIOS+Accessors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BD0188556EB82B1BDF2BE2 /* KoinIOS+Accessors.swift */; };
+		2A57F6FB73C929C09780E30A /* Koin+PropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BD0188556EB82B1BDF2BE2 /* Koin+PropertyWrapper.swift */; };
 		2FAFDE2DF7F28B31D8F84EE0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 240E1EDBFE38576EB957213D /* LaunchScreen.storyboard */; };
 		60FDFF4B04F8EBE197A8B10D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF584FCABD5B1F6154A5FF0 /* SceneDelegate.swift */; };
 		9B7DF634255EEC55008CFEE0 /* MainViewModelWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7DF633255EEC55008CFEE0 /* MainViewModelWrapper.swift */; };
@@ -35,7 +35,7 @@
 		79E393AB41A1A858A5C3BBB7 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		7CA9CA2DEC4F55B5177CB478 /* Pods-Lynx.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lynx.release.xcconfig"; path = "Target Support Files/Pods-Lynx/Pods-Lynx.release.xcconfig"; sourceTree = "<group>"; };
 		7D11C07FD0750B3EC3194F3C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		87BD0188556EB82B1BDF2BE2 /* KoinIOS+Accessors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KoinIOS+Accessors.swift"; sourceTree = "<group>"; };
+		87BD0188556EB82B1BDF2BE2 /* Koin+PropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Koin+PropertyWrapper.swift"; sourceTree = "<group>"; };
 		8BF584FCABD5B1F6154A5FF0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		8ED1543923AF760068196EA9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9B7DF633255EEC55008CFEE0 /* MainViewModelWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelWrapper.swift; sourceTree = "<group>"; };
@@ -111,7 +111,7 @@
 		98ABE456BC9E38E8C2841420 /* Kotlin */ = {
 			isa = PBXGroup;
 			children = (
-				87BD0188556EB82B1BDF2BE2 /* KoinIOS+Accessors.swift */,
+				87BD0188556EB82B1BDF2BE2 /* Koin+PropertyWrapper.swift */,
 			);
 			path = Kotlin;
 			sourceTree = "<group>";
@@ -277,7 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D73782F593E173E0CC455CC4 /* AppDelegate.swift in Sources */,
-				2A57F6FB73C929C09780E30A /* KoinIOS+Accessors.swift in Sources */,
+				2A57F6FB73C929C09780E30A /* Koin+PropertyWrapper.swift in Sources */,
 				028612ED82FA9846A90E6074 /* MainView.swift in Sources */,
 				60FDFF4B04F8EBE197A8B10D /* SceneDelegate.swift in Sources */,
 				9B7DF634255EEC55008CFEE0 /* MainViewModelWrapper.swift in Sources */,

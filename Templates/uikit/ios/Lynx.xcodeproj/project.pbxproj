@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		17A7207792C2B7467D0C73C6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B74CB5E4328D2165A170518 /* Main.storyboard */; };
-		32E4FAACFF624E0D19C2A2B5 /* KoinIOS+Accessors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B31312A7F2F9412B509C72 /* KoinIOS+Accessors.swift */; };
+		32E4FAACFF624E0D19C2A2B5 /* Koin+PropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B31312A7F2F9412B509C72 /* Koin+PropertyWrapper.swift */; };
 		4042494EA8DAB09ACA270CFA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11D11254BEE5889955B6AA0 /* AppDelegate.swift */; };
 		AFB38862B0D56AAF13CACA9E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA899C9B5D60FD4BA8B34509 /* SceneDelegate.swift */; };
 		C0F7DC0FA5AB435678A87A05 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4429ED347BC375DD24F7D10B /* LaunchScreen.storyboard */; };
@@ -36,7 +36,7 @@
 		54D8EF7186DF7522287992EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6EF657C6F364AFE37782A103 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		88A2F22F8764F9BB8228C32B /* Lynx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lynx.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1B31312A7F2F9412B509C72 /* KoinIOS+Accessors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KoinIOS+Accessors.swift"; sourceTree = "<group>"; };
+		A1B31312A7F2F9412B509C72 /* Koin+PropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Koin+PropertyWrapper.swift"; sourceTree = "<group>"; };
 		AEF9828C8C684DB808FBB71F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C7BA2AF1678AB806DFC3DCFC /* Pods_Lynx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lynx.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D11D11254BEE5889955B6AA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -100,7 +100,7 @@
 		6BD589EC72F2F661A578A7A3 /* Kotlin */ = {
 			isa = PBXGroup;
 			children = (
-				A1B31312A7F2F9412B509C72 /* KoinIOS+Accessors.swift */,
+				A1B31312A7F2F9412B509C72 /* Koin+PropertyWrapper.swift */,
 			);
 			path = Kotlin;
 			sourceTree = "<group>";
@@ -278,7 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4042494EA8DAB09ACA270CFA /* AppDelegate.swift in Sources */,
-				32E4FAACFF624E0D19C2A2B5 /* KoinIOS+Accessors.swift in Sources */,
+				32E4FAACFF624E0D19C2A2B5 /* Koin+PropertyWrapper.swift in Sources */,
 				CB8BFCB3EDAC48410FC290DE /* MainViewController.swift in Sources */,
 				AFB38862B0D56AAF13CACA9E /* SceneDelegate.swift in Sources */,
 			);
