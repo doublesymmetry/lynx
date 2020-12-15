@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
 plugins {
     kotlin("multiplatform")
     id("co.touchlab.native.cocoapods")
@@ -6,7 +8,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(Versions.compile_sdk)
     defaultConfig {
         minSdkVersion(Versions.min_sdk)
         targetSdkVersion(Versions.target_sdk)
@@ -23,13 +25,13 @@ android {
 
 kotlin {
     android()
-    // Revert to just ios() when gradle plugin can properly resolve it
-    val onPhone = System.getenv("SDK_NAME")?.startsWith("iphoneos") ?: false
-    if (onPhone) {
-        iosArm64("ios")
-    } else {
-        iosX64("ios")
-    }
+    val iOSTarget: (String) -> KotlinNativeTarget =
+        if (System.getenv("SDK_NAME")?.startsWith("iphoneos") == true)
+            ::iosArm64
+        else
+            ::iosX64
+
+    iOSTarget("ios")
 
     version = "1.1"
 
@@ -40,60 +42,69 @@ kotlin {
                 useExperimentalAnnotation("kotlinx.coroutines.ExperimentalCoroutinesApi")
             }
         }
-    }
 
-    sourceSets["commonMain"].dependencies {
-        implementation(kotlin("stdlib-common", Versions.kotlin))
-        implementation(Deps.Ktor.commonCore)
-        implementation(Deps.Ktor.commonJson)
-        implementation(Deps.Ktor.commonLogging)
-        implementation(Deps.Coroutines.common)
-        implementation(Deps.stately)
-        implementation(Deps.multiplatformSettings)
-        implementation(Deps.koinCore)
-        implementation(Deps.Ktor.commonSerialization)
-        api(Deps.kermit)
-        api(Deps.mokoMvvm)
-    }
-
-    sourceSets["commonTest"].dependencies {
-        implementation(Deps.multiplatformSettingsTest)
-        implementation(Deps.KotlinTest.common)
-        implementation(Deps.KotlinTest.annotations)
-        implementation(Deps.koinTest)
-        // Karmok is an experimental library which helps with mocking interfaces
-        implementation(Deps.karmok)
-    }
-
-    sourceSets["androidMain"].dependencies {
-        implementation(kotlin("stdlib", Versions.kotlin))
-        implementation(Deps.Ktor.jvmCore)
-        implementation(Deps.Ktor.jvmJson)
-        implementation(Deps.Ktor.jvmLogging)
-        implementation(Deps.Coroutines.android)
-        implementation(Deps.Ktor.androidSerialization)
-        implementation(Deps.Ktor.androidCore)
-    }
-
-    sourceSets["androidTest"].dependencies {
-        implementation(Deps.KotlinTest.jvm)
-        implementation(Deps.KotlinTest.junit)
-        implementation(Deps.AndroidXTest.core)
-        implementation(Deps.AndroidXTest.junit)
-        implementation(Deps.AndroidXTest.runner)
-        implementation(Deps.AndroidXTest.rules)
-        implementation(Deps.Coroutines.test)
-        implementation(Deps.robolectric)
-    }
-
-    sourceSets["iosMain"].dependencies {
-        implementation(Deps.Ktor.ios)
-        implementation(Deps.Coroutines.common) {
-            version {
-                strictly(Versions.coroutines)
+        val commonMain by getting {
+            dependencies {
+                implementation(Deps.Ktor.commonCore)
+                implementation(Deps.Ktor.commonJson)
+                implementation(Deps.Ktor.commonLogging)
+                implementation(Deps.Coroutines.common) {
+                    version {
+                        strictly(Versions.coroutines)
+                    }
+                }
+                implementation(Deps.stately)
+                implementation(Deps.multiplatformSettings)
+                implementation(Deps.koinCore)
+                implementation(Deps.Ktor.commonSerialization)
+                api(Deps.kermit)
+                api(Deps.mokoMvvm)
             }
         }
-        implementation(Deps.koinCore)
+
+        val commonTest by getting {
+            dependencies {
+                implementation(Deps.multiplatformSettingsTest)
+                implementation(Deps.KotlinTest.common)
+                implementation(Deps.KotlinTest.annotations)
+                implementation(Deps.koinTest)
+                // Karmok is an experimental library which helps with mocking interfaces
+                implementation(Deps.karmok)
+            }
+        }
+
+        val androidMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib", Versions.kotlin))
+                implementation(Deps.Coroutines.android) {
+                    version {
+                        strictly(Versions.coroutines)
+                    }
+                }
+                implementation(Deps.Ktor.androidCore)
+            }
+        }
+
+        val androidTest by getting {
+            dependencies {
+                implementation(Deps.KotlinTest.jvm)
+                implementation(Deps.KotlinTest.junit)
+                implementation(Deps.AndroidXTest.core)
+                implementation(Deps.AndroidXTest.junit)
+                implementation(Deps.AndroidXTest.runner)
+                implementation(Deps.AndroidXTest.rules)
+                implementation(Deps.Coroutines.test)
+                implementation(Deps.robolectric)
+            }
+        }
+
+        val iosMain by getting {
+            dependencies {
+                implementation(Deps.Ktor.ios)
+                implementation(Deps.Coroutines.common)
+                implementation(Deps.koinCore)
+            }
+        }
     }
 
     cocoapodsext {

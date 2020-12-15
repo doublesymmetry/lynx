@@ -1,9 +1,6 @@
-import org.jetbrains.kotlin.config.KotlinCompilerVersion
-
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("android.extensions")
 }
 
 android {
@@ -44,21 +41,27 @@ android {
         isWarningsAsErrors = true
         isAbortOnError = true
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation(project(":shared"))
-    implementation(Deps.recyclerView)
-    implementation(Deps.material_x)
-    implementation(Deps.app_compat_x)
-    implementation(Deps.lifecycle_extensions_x)
-    implementation(Deps.core_ktx)
+    implementation(Deps.AndroidX.recyclerView)
+    implementation(Deps.material)
+    implementation(Deps.AndroidX.appcompat)
+    implementation(Deps.AndroidX.core_ktx)
     implementation(Deps.Ktor.androidCore)
-    implementation(Deps.constraintlayout)
+    implementation(Deps.AndroidX.constraintlayout)
     implementation(Deps.Coroutines.common)
     implementation(Deps.Coroutines.android)
     implementation(Deps.multiplatformSettings)
     implementation(Deps.koinCore)
+    implementation(Deps.AndroidX.lifecycle_viewmodel)
+    implementation(Deps.AndroidX.lifecycle_viewmodel_extensions)
+    implementation(Deps.AndroidX.lifecycle_livedata)
+    implementation(Deps.AndroidX.lifecycle_extension)
     testImplementation(Deps.junit)
 }
