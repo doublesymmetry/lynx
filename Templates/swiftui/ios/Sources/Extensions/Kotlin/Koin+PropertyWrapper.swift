@@ -1,6 +1,6 @@
 //
 //  Koin+PropertyWrapper.swift
-//  OneBeat
+//  Lynx
 //
 //  Created by David Chavez on 29.11.20.
 //
